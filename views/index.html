@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/public/media/icon.png" type="image/x-icon">
+  <title>Your Fashion Collection</title>
+  <!-- Import Montserrat font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/style.css" />
+  <style>
+    /* === Existing Styles (unchanged) === */
+    /* Hero Section Adjustments */
+    #hero {
+      position: relative;
+      height: calc(100vh - 80px);
+      margin-top: 80px;
+      overflow: hidden;
+    }
+    /* Dark overlay to boost text visibility */
+    #hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .slides {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .slide.active {
+      opacity: 1;
+    }
+    .slide .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: var(--img);
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px);
+      transform: scale(1.1);
+      z-index: 1;
+    }
+    .slide img {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 2;
+    }
+    .dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .dot.active {
+      background: rgba(255, 255, 255, 1);
+    }
+    /* Centered hero content */
+    .hero-content {
+      position: absolute;
+      z-index: 6;
+      color: #fff;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    /* Remove any zoom effects from product images */
+    .products .product img {
+      transition: none !important;
+      transform: none !important;
+    }
+    /* About Us Section Styling */
+    #about {
+      padding: 40px 20px;
+      background: #fafafa;
+    }
+    .about-container {
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+    .about-video {
+      flex: 1 1 400px;
+    }
+    .about-video video {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .about-text {
+      flex: 1 1 400px;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+    }
+    .about-text p {
+      margin-bottom: 20px;
+    }
+    /* Updated Read More Button (Learn More) - now red */
+    .read-more-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #e63946; /* red background */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .read-more-btn:hover {
+      background: #d62828;
+    }
+    /* Contact Section Styling */
+    #contact {
+      padding: 40px 20px;
+      background: #fff;
+      text-align: center;
+    }
+    #contact h2 {
+      margin-bottom: 20px;
+    }
+    #contact p {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    #contact .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #d62828;;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    #contact .btn:hover {
+      background: #555;
+    }
+    /* Navigation & Language Selector */
+    .language-selector {
+      position: fixed;
+      right: 20px;
+      top: 30px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .lang-btn img {
+      width: 24px;
+      height: auto;
+      margin-right: 8px;
+    }
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 5px;
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .lang-dropdown a:hover {
+      background: #f0f0f0;
+    }
+    .lang-dropdown img {
+      margin-right: 8px;
+      width: 16px;
+      height: auto;
+    }
+    /* Other sections (Collection, etc.) remain unchanged... */
+  </style>
+</head>
+<body>
+  <!-- Fixed Navigation Header -->
+  <header id="header">
+    <nav>
+      <div class="logo">
+        <a href="index.html">
+          <img src="/public/media/logo.png" alt="Your Brand Logo">
+        </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="products.html" data-i18n="nav.products">Products</a></li>
+        <li><a href="about.html" data-i18n="nav.about">About Us</a></li>
+        <li><a href="advantages.html" data-i18n="nav.whyus">Why Us</a></li>
+        <li><a href="contact.html" data-i18n="nav.contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <button class="lang-btn">
+      <img src="https://flagcdn.com/24x18/us.png" alt="English">
+      <span class="lang-text">English</span>
+    </button>
+    <div class="lang-dropdown">
+      <a href="#" data-lang="en">
+        <img src="https://flagcdn.com/16x12/us.png" alt="English">
+        <span>English</span>
+      </a>
+      <a href="#" data-lang="es">
+        <img src="https://flagcdn.com/16x12/es.png" alt="Español">
+        <span>Español</span>
+      </a>
+      <a href="#" data-lang="zh">
+        <img src="https://flagcdn.com/16x12/cn.png" alt="中文">
+        <span>中文</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Hero Section with Slider -->
+  <section id="hero">
+    <div class="slider">
+      <div class="slides">
+        <div class="slide active" style="--img: url('/public/media/home/hero1.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero1.png" alt="Hero Image 1">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero2.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero2.png" alt="Hero Image 2">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero3.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero3.png" alt="Hero Image 3">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero4.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero4.png" alt="Hero Image 4">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero5.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero5.png" alt="Hero Image 5">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero6.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero6.png" alt="Hero Image 6">
+          </a>
+        </div>
+        <div class="slide" style="--img: url('/public/media/home/hero7.png');">
+          <a href="products.html">
+            <div class="bg"></div>
+            <img src="/public/media/home/hero7.png" alt="Hero Image 7">
+          </a>
+        </div>
+      </div>
+      <div class="dots">
+        <span class="dot active" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>
+        <span class="dot" data-index="3"></span>
+        <span class="dot" data-index="4"></span>
+        <span class="dot" data-index="5"></span>
+        <span class="dot" data-index="6"></span>
+      </div>
+    </div>
+    <div class="hero-content">
+      <h2 data-i18n="hero.title">Elegance Redefined</h2>
+      <p data-i18n="hero.subtitle">Discover our exclusive women's collection</p>
+      <a href="#collection" class="btn" data-i18n="hero.button">Explore Collection</a>
+    </div>
+  </section>
+  
+  <!-- Collection Section with Fade-In on Scroll -->
+  <section id="collection" class="animate-on-scroll">
+    <h2 data-i18n="collection.title">Collection</h2>
+    <div class="products">
+      <div class="product">
+        <a href="seamless.html">
+          <img src="/public/media/seamless.JPG" alt="Seamless" />
+          <h3 data-i18n="product.seamless">Seamless</h3>
+        </a>
+      </div>
+      <div class="product">
+        <a href="top.html">
+          <img src="/public/media/top.JPG" alt="Top" />
+          <h3 data-i18n="product.tops">Tops</h3>
+        </a>
+      </div>
+      <div class="product">
+        <a href="coats.html">
+          <img src="/public/media/coat.JPG" alt="Coats" />
+          <h3 data-i18n="product.coats">Coats</h3>
+        </a>
+      </div>
+      <div class="product">
+        <a href="dress.html">
+          <img src="/public/media/dress.JPG" alt="Dress" />
+          <h3 data-i18n="product.dress">Dress</h3>
+        </a>
+      </div>
+      <div class="product">
+        <a href="pants.html">
+          <img src="/public/media/dress.JPG" alt="Pants" />
+          <h3 data-i18n="product.pants">Pants</h3>
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Us Section -->
+  <section id="about" class="animate-on-scroll">
+    <h2 data-i18n="about.title">About Us</h2>
+    <div class="about-container">
+      <div class="about-video">
+        <video src="/public/media/about/about1.mp4" controls></video>
+      </div>
+      <div class="about-text">
+        <p data-i18n="about.text">
+          Nantong Joyful Fashion Co., Ltd. is a garment trading & industrial company. The company is located in the famous textile and garment city—Nantong, Jiangsu, China, which is only 1.5 hours drive to Shanghai, the biggest business center in China. In 2021, the company officially moved the head office to Haobang Building, opening a new page in the 20-year history of the company.
+        </p>
+        <a href="about.html" class="read-more-btn" data-i18n="about.button">Read More</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Contact Section -->
+  <section id="contact" class="animate-on-scroll">
+    <h2 data-i18n="contact.title">Contact</h2>
+    <p data-i18n="contact.text">Get in touch with us for collaborations and inquiries.</p>
+    <a href="contact.html" class="btn" data-i18n="contact.button">Contact Us</a>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <p data-i18n="footer.text">&copy; CopyRight 2024 All Right Reserved Joyful Fashion 苏ICP备2023052917号</p>
+  </footer>
+  
+  <!-- Slider Script -->
+  <script src="/public/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const slides = document.querySelectorAll('#hero .slide');
+      const dots = document.querySelectorAll('#hero .dot');
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+      const intervalTime = 7000;
+      let slideInterval;
+      
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+      }
+      
+      function nextSlide() {
+        let nextIndex = (currentIndex + 1) % totalSlides;
+        showSlide(nextIndex);
+      }
+      
+      slideInterval = setInterval(nextSlide, intervalTime);
+      
+      dots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          clearInterval(slideInterval);
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
+          slideInterval = setInterval(nextSlide, intervalTime);
+        });
+      });
+    });
+  </script>
+  
+  <!-- Language Switcher Script with localStorage Persistence -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Translation dictionary for English, Spanish, and Chinese
+      const translations = {
+        en: {
+          "nav.home": "Home",
+          "nav.products": "Products",
+          "nav.about": "About Us",
+          "nav.whyus": "Why Us",
+          "nav.contact": "Contact Us",
+          "hero.title": "Elegance Redefined",
+          "hero.subtitle": "Discover our exclusive women's collection",
+          "hero.button": "Explore Collection",
+          "collection.title": "Collection",
+          "product.seamless": "Seamless",
+          "product.tops": "Tops",
+          "product.coats": "Coats",
+          "product.dress": "Dress",
+          "product.pants": "Pants",
+          "about.title": "About Us",
+          "about.text": "Nantong Joyful Fashion Co., Ltd. is a garment trading & industrial company. The company is located in the famous textile and garment city—Nantong, Jiangsu, China, which is only 1.5 hours drive to Shanghai, the biggest business center in China. In 2021, the company officially moved the head office to Haobang Building, opening a new page in the 20-year history of the company.",
+          "about.button": "Read More",
+          "contact.title": "Contact",
+          "contact.text": "Get in touch with us for collaborations and inquiries.",
+          "contact.button": "Contact Us",
+          "footer.text": "&copy; CopyRight 2024 All Right Reserved Joyful Fashion 苏ICP备2023052917号"
+        },
+        es: {
+          "nav.home": "Inicio",
+          "nav.products": "Productos",
+          "nav.about": "Sobre Nosotros",
+          "nav.whyus": "Por Qué Nosotros",
+          "nav.contact": "Contáctanos",
+          "hero.title": "Elegancia Redefinida",
+          "hero.subtitle": "Descubre nuestra colección exclusiva para mujeres",
+          "hero.button": "Explorar Colección",
+          "collection.title": "Colección",
+          "product.seamless": "Sin costuras",
+          "product.tops": "Tops",
+          "product.coats": "Abrigos",
+          "product.dress": "Vestido",
+          "product.pants": "Pantalones",
+          "about.title": "Sobre Nosotros",
+          "about.text": "Nantong Joyful Fashion Co., Ltd. es una empresa comercial e industrial de prendas. La compañía está ubicada en la famosa ciudad textil y de confecciones - Nantong, Jiangsu, China, a solo 1.5 horas en coche de Shanghai, el mayor centro de negocios en China. En 2021, la compañía trasladó oficialmente su sede al Haobang Building, abriendo una nueva página en la historia de 20 años de la empresa.",
+          "about.button": "Leer Más",
+          "contact.title": "Contacto",
+          "contact.text": "Ponte en contacto con nosotros para colaboraciones y consultas.",
+          "contact.button": "Contáctanos",
+          "footer.text": "&copy; CopyRight 2024 Joyful Fashion. Todos los derechos reservados. 苏ICP备2023052917号"
+        },
+        zh: {
+          "nav.home": "首页",
+          "nav.products": "产品",
+          "nav.about": "关于我们",
+          "nav.whyus": "为什么选择我们",
+          "nav.contact": "联系我们",
+          "hero.title": "优雅新定义",
+          "hero.subtitle": "探索我们独家女性系列",
+          "hero.button": "探索系列",
+          "collection.title": "系列",
+          "product.seamless": "无缝",
+          "product.tops": "上衣",
+          "product.coats": "外套",
+          "product.dress": "连衣裙",
+          "product.pants": "裤子",
+          "about.title": "关于我们",
+          "about.text": "南通快乐时尚有限公司是一家服装贸易和工业公司。公司位于著名的纺织服装之城——中国江苏南通，距离中国最大的商业中心上海仅1.5小时车程。2021年，公司正式迁至浩邦大厦，开启了公司20年历史的新篇章。",
+          "about.button": "查看更多",
+          "contact.title": "联系",
+          "contact.text": "联系我们以获取合作与咨询。",
+          "contact.button": "联系我们",
+          "footer.text": "&copy; CopyRight 2024 快乐时尚 苏ICP备2023052917号"
+        }
+      };
+
+      // Mapping for language names (for the button text)
+      const languageNames = {
+        en: "English",
+        es: "Español",
+        zh: "中文"
+      };
+
+      const flagIcons = {
+        en: "https://flagcdn.com/24x18/us.png",
+        es: "https://flagcdn.com/24x18/es.png",
+        zh: "https://flagcdn.com/24x18/cn.png"
+      };
+
+      // Check if a language is stored in localStorage, otherwise default to English
+      let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+      function updateLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (translations[lang] && translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
+          }
+        });
+        // Update the language button flag and text
+        document.querySelector('.lang-btn img').src = flagIcons[lang];
+        document.querySelector('.lang-btn .lang-text').innerText = languageNames[lang];
+      }
+      
+      // Set the language on page load
+      updateLanguage(currentLanguage);
+      
+      // Toggle dropdown display
+      const langBtn = document.querySelector('.lang-btn');
+      const langDropdown = document.querySelector('.lang-dropdown');
+      
+      langBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langDropdown.style.display = (langDropdown.style.display === 'block') ? 'none' : 'block';
+      });
+      
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', function() {
+        langDropdown.style.display = 'none';
+      });
+      
+      // Update language when an option is selected and store it in localStorage
+      langDropdown.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          const lang = this.getAttribute('data-lang');
+          currentLanguage = lang;
+          updateLanguage(lang);
+          localStorage.setItem('selectedLanguage', lang);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

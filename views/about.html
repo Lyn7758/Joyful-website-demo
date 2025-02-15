@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="about.pageTitle">About Us - Your Fashion Collection</title>
+  <link rel="icon" href="/public/media/icon.png" type="image/x-icon">
+  <!-- Import Montserrat font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Use the same external CSS for all pages -->
+  <link rel="stylesheet" href="/public/css/style.css" />
+  <style>
+    /* About page specific styles */
+    
+    /* Section 1: Full-Page Video with Centered Text */
+    .fullpage-section {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .fullpage-section .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 20px;
+    }
+    .fullpage-section h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    .fullpage-section p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+    
+    /* Alternating Sections (Sections 2-7) */
+    .alt-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      min-height: 80vh;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .alt-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .alt-section .img-container {
+      flex: 0 0 50%;
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+    }
+    .alt-section .text-container {
+      flex: 0 0 50%;
+      padding: 20px;
+    }
+    .alt-section .text-container h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .alt-section .text-container p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .alt-section.reverse {
+      flex-direction: row-reverse;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .alt-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      .alt-section.reverse {
+        flex-direction: column;
+      }
+      .alt-section .img-container, 
+      .alt-section .text-container {
+        width: 100%;
+      }
+      .alt-section .img-container {
+        margin-bottom: 20px;
+        height: 300px;
+      }
+    }
+    
+    /* === Language Selector Styles === */
+    .language-selector {
+      position: fixed;
+      right: 20px;
+      top: 30px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .lang-btn img {
+      width: 24px;
+      height: auto;
+      margin-right: 8px;
+    }
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 5px;
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .lang-dropdown a:hover {
+      background: #f0f0f0;
+    }
+    .lang-dropdown img {
+      margin-right: 8px;
+      width: 16px;
+      height: auto;
+    }
+    
+    /* Additional Learn More Button Styles */
+    .learn-more-section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .learn-more-btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #e63946;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      transition: background 0.3s ease;
+    }
+    .learn-more-btn:hover {
+      background: #d62828;
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed Navigation Header (Consistent with index.html) -->
+  <header id="header">
+    <nav>
+      <div class="logo">
+        <a href="index.html">
+          <img src="/public/media/logo.png" alt="Your Brand Logo">
+        </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="products.html" data-i18n="nav.products">Products</a></li>
+        <li><a href="about.html" data-i18n="nav.about">About Us</a></li>
+        <li><a href="advantages.html" data-i18n="nav.whyus">Why Us</a></li>
+        <li><a href="contact.html" data-i18n="nav.contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Language Selector: Fixed at Top-Right Corner -->
+  <div class="language-selector">
+    <button class="lang-btn">
+      <img src="https://flagcdn.com/24x18/us.png" alt="English">
+      <span class="lang-text">English</span>
+    </button>
+    <div class="lang-dropdown">
+      <a href="#" data-lang="en">
+        <img src="https://flagcdn.com/16x12/us.png" alt="English">
+        <span>English</span>
+      </a>
+      <a href="#" data-lang="es">
+        <img src="https://flagcdn.com/16x12/es.png" alt="Español">
+        <span>Español</span>
+      </a>
+      <a href="#" data-lang="zh">
+        <img src="https://flagcdn.com/16x12/cn.png" alt="中文">
+        <span>中文</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Section 1: Full-Page Video with Centered Text -->
+  <section class="fullpage-section">
+    <video autoplay muted loop playsinline class="bg-video">
+      <source src="/public/media/about/about1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="content">
+      <h1 data-i18n="about.welcome">Welcome to Our Story</h1>
+      <p data-i18n="about.intro">
+        Discover the passion and creativity that fuels our journey from humble beginnings to global success.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 2: Image on Left, Text on Right -->
+  <section class="alt-section" id="about2">
+    <div class="img-container" style="background-image: url('/public/media/about/about2.jpg');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.background.title">Company Background and Strategic Location</h2>
+      <p data-i18n="about.background.text">
+        Nantong Joyful Fashion Co., Ltd. is a well-established garment trading and industrial enterprise based in Nantong, Jiangsu, China—a city renowned for its textile and garment industry. With its strategic location just 1.5 hours from Shanghai, the company leverages its proximity to China’s largest business center. The relocation of the head office to Haobang Building in 2021 marked a significant new chapter in its 20-year history.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 3: Image on Right, Text on Left -->
+  <section class="alt-section reverse" id="about3">
+    <div class="img-container" style="background-image: url('/public/media/about/about3.jpg');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.leadership.title">Leadership and Expert Workforce</h2>
+      <p data-i18n="about.leadership.text">
+        Under the dynamic leadership of Mr. Frank Zhang, Joyful has steadily grown into a leader among foreign trade enterprises in Nantong. The company boasts a dedicated team of professional foreign trade talents and an independent fabric development department, ensuring seamless communication with international clients and the timely acquisition of the latest global fabric trends.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 4: Image on Left, Text on Right -->
+  <section class="alt-section" id="about4">
+    <div class="img-container" style="background-image: url('/public/media/about/about4.jpg');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.quality.title">Commitment to Quality and Innovative Design</h2>
+      <p data-i18n="about.quality.text">
+        At the core of Joyful’s operations is an unwavering commitment to quality. The company’s skilled pattern-making, workmanship, and quality control departments work in unison to translate design visions into meticulously crafted garments. By consistently prioritizing high-quality products and dedicated service, Joyful sets the standard for excellence in both domestic and international markets.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 5: Image on Right, Text on Left -->
+  <section class="alt-section reverse" id="about5">
+    <div class="img-container" style="background-image: url('/public/media/about/about5.png');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.production.title">Advanced Production Capabilities and Operational Excellence</h2>
+      <p data-i18n="about.production.text">
+        Joyful’s operational backbone is reinforced by its modern production infrastructure. An independent sample center and state-of-the-art production lines ensure efficiency and timely delivery of samples and orders. With two self-owned garment factories—one in Nantong and another in Lian Yun Gang City—and partnerships with several sub-contractor factories, the company maintains rigorous quality control and smooth production flow from cutting to packing.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 6: Image on Left, Text on Right -->
+  <section class="alt-section" id="about6">
+    <div class="img-container" style="background-image: url('/public/media/about/about6.jpg');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.brand.title">Brand Development and Market Expansion</h2>
+      <p data-i18n="about.brand.text">
+        Building on its extensive experience in producing high-end garments for renowned foreign brands, Joyful embarked on creating its own label. In 2018, the company began developing the Special Staying women’s fashion brand—an initiative that blends classical Italian aesthetics with contemporary cultural aspirations. Officially launched in October 2020, the brand’s “fashionable, elegant” positioning has resonated with confident, sophisticated women.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Section 7: Image on Right, Text on Left -->
+  <section class="alt-section reverse" id="about7">
+    <div class="img-container" style="background-image: url('/public/media/about/about7.jpg');"></div>
+    <div class="text-container">
+      <h2 data-i18n="about.philosophy.title">Corporate Philosophy and Future Vision</h2>
+      <p data-i18n="about.philosophy.text">
+        Joyful’s enduring success is driven by its enterprise spirit of “unity, dedication, innovation, and development.” The company upholds values that prioritize integrity, collaboration, and a win-win approach for customers, employees, and society alike. This forward-thinking vision not only fuels Joyful’s ongoing growth but also embodies its commitment to enriching the lives of its stakeholders and contributing positively to the community.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Learn More Button Section -->
+  <section class="learn-more-section">
+    <a href="advantages.html" class="learn-more-btn" data-i18n="about.learnMore">Learn More</a>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <p data-i18n="footer.text">&copy; 2025 Your Brand. All rights reserved.</p>
+  </footer>
+  
+  <!-- Intersection Observer for alternating sections -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const altSections = document.querySelectorAll('.alt-section');
+      const options = { threshold: 0.3 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            entry.target.classList.remove('visible');
+          }
+        });
+      }, options);
+      altSections.forEach(section => observer.observe(section));
+    });
+  </script>
+  
+  <!-- Language Switcher Script with localStorage Persistence -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Translation dictionary for English, Spanish, and Chinese
+      const translations = {
+        en: {
+          "about.pageTitle": "About Us - Your Fashion Collection",
+          "nav.home": "Home",
+          "nav.products": "Products",
+          "nav.about": "About Us",
+          "nav.whyus": "Why Us",
+          "nav.contact": "Contact Us",
+          "about.welcome": "Welcome to Our Story",
+          "about.intro": "Discover the passion and creativity that fuels our journey from humble beginnings to global success.",
+          "about.background.title": "Company Background and Strategic Location",
+          "about.background.text": "Nantong Joyful Fashion Co., Ltd. is a well-established garment trading and industrial enterprise based in Nantong, Jiangsu, China—a city renowned for its textile and garment industry. With its strategic location just 1.5 hours from Shanghai, the company leverages its proximity to China’s largest business center. The relocation of the head office to Haobang Building in 2021 marked a significant new chapter in its 20-year history.",
+          "about.leadership.title": "Leadership and Expert Workforce",
+          "about.leadership.text": "Under the dynamic leadership of Mr. Frank Zhang, Joyful has steadily grown into a leader among foreign trade enterprises in Nantong. The company boasts a dedicated team of professional foreign trade talents and an independent fabric development department, ensuring seamless communication with international clients and the timely acquisition of the latest global fabric trends.",
+          "about.quality.title": "Commitment to Quality and Innovative Design",
+          "about.quality.text": "At the core of Joyful’s operations is an unwavering commitment to quality. The company’s skilled pattern-making, workmanship, and quality control departments work in unison to translate design visions into meticulously crafted garments. By consistently prioritizing high-quality products and dedicated service, Joyful sets the standard for excellence in both domestic and international markets.",
+          "about.production.title": "Advanced Production Capabilities and Operational Excellence",
+          "about.production.text": "Joyful’s operational backbone is reinforced by its modern production infrastructure. An independent sample center and state-of-the-art production lines ensure efficiency and timely delivery of samples and orders. With two self-owned garment factories—one in Nantong and another in Lian Yun Gang City—and partnerships with several sub-contractor factories, the company maintains rigorous quality control and smooth production flow from cutting to packing.",
+          "about.brand.title": "Brand Development and Market Expansion",
+          "about.brand.text": "Building on its extensive experience in producing high-end garments for renowned foreign brands, Joyful embarked on creating its own label. In 2018, the company began developing the Special Staying women’s fashion brand—an initiative that blends classical Italian aesthetics with contemporary cultural aspirations. Officially launched in October 2020, the brand’s “fashionable, elegant” positioning has resonated with confident, sophisticated women.",
+          "about.philosophy.title": "Corporate Philosophy and Future Vision",
+          "about.philosophy.text": "Joyful’s enduring success is driven by its enterprise spirit of “unity, dedication, innovation, and development.” The company upholds values that prioritize integrity, collaboration, and a win-win approach for customers, employees, and society alike. This forward-thinking vision not only fuels Joyful’s ongoing growth but also embodies its commitment to enriching the lives of its stakeholders and contributing positively to the community.",
+          "footer.text": "&copy; 2025 Your Brand. All rights reserved.",
+          "about.learnMore": "Learn More"
+        },
+        es: {
+          "about.pageTitle": "Sobre Nosotros - Your Fashion Collection",
+          "nav.home": "Inicio",
+          "nav.products": "Productos",
+          "nav.about": "Sobre Nosotros",
+          "nav.whyus": "Por Qué Nosotros",
+          "nav.contact": "Contáctanos",
+          "about.welcome": "Bienvenido a Nuestra Historia",
+          "about.intro": "Descubre la pasión y creatividad que impulsa nuestro viaje desde humildes comienzos hasta el éxito global.",
+          "about.background.title": "Antecedentes de la Empresa y Ubicación Estratégica",
+          "about.background.text": "Nantong Joyful Fashion Co., Ltd. es una empresa consolidada de comercio de prendas y de la industria textil ubicada en Nantong, Jiangsu, China, una ciudad reconocida por su industria textil y de confecciones. Con una ubicación estratégica a solo 1.5 horas de Shanghai, la compañía aprovecha su proximidad al mayor centro de negocios de China. La reubicación de la oficina central en el edificio Haobang en 2021 marcó un nuevo capítulo significativo en su historia de 20 años.",
+          "about.leadership.title": "Liderazgo y Equipo de Expertos",
+          "about.leadership.text": "Bajo el liderazgo dinámico del Sr. Frank Zhang, Joyful se ha consolidado como un líder entre las empresas de comercio exterior en Nantong. La compañía cuenta con un equipo dedicado de profesionales en comercio exterior y un departamento independiente de desarrollo de telas, asegurando una comunicación fluida con clientes internacionales y la adquisición oportuna de las últimas tendencias globales en telas.",
+          "about.quality.title": "Compromiso con la Calidad y el Diseño Innovador",
+          "about.quality.text": "En el corazón de las operaciones de Joyful se encuentra un compromiso inquebrantable con la calidad. Los departamentos de patronaje, mano de obra y control de calidad trabajan en conjunto para traducir visiones de diseño en prendas elaboradas meticulosamente. Al priorizar consistentemente productos de alta calidad y un servicio dedicado, Joyful establece el estándar de excelencia tanto en mercados nacionales como internacionales.",
+          "about.production.title": "Capacidades Avanzadas de Producción y Excelencia Operativa",
+          "about.production.text": "La columna vertebral operativa de Joyful se refuerza con su infraestructura de producción moderna. Un centro de muestras independiente y líneas de producción de última generación aseguran la eficiencia y la entrega oportuna de muestras y pedidos. Con dos fábricas de confección propias—una en Nantong y otra en Lian Yun Gang City—y asociaciones con varias fábricas subcontratadas, la compañía mantiene un riguroso control de calidad y un flujo de producción fluido desde el corte hasta el embalaje.",
+          "about.brand.title": "Desarrollo de Marca y Expansión del Mercado",
+          "about.brand.text": "Basándose en su amplia experiencia en la producción de prendas de alta gama para marcas extranjeras reconocidas, Joyful se embarcó en la creación de su propia etiqueta. En 2018, la compañía comenzó a desarrollar la marca de moda para mujeres Special Staying—una iniciativa que fusiona la estética clásica italiana con aspiraciones culturales contemporáneas. Lanzada oficialmente en octubre de 2020, el posicionamiento de la marca como 'a la moda, elegante' ha resonado con mujeres seguras y sofisticadas.",
+          "about.philosophy.title": "Filosofía Corporativa y Visión de Futuro",
+          "about.philosophy.text": "El éxito perdurable de Joyful se impulsa por su espíritu empresarial de 'unidad, dedicación, innovación y desarrollo'. La compañía defiende valores que priorizan la integridad, la colaboración y un enfoque de ganar-ganar para clientes, empleados y la sociedad. Esta visión de futuro no solo impulsa el crecimiento continuo de Joyful, sino que también encarna su compromiso de enriquecer la vida de sus partes interesadas y contribuir positivamente a la comunidad.",
+          "footer.text": "&copy; 2025 Your Brand. Todos los derechos reservados.",
+          "about.learnMore": "Aprende Más"
+        },
+        zh: {
+          "about.pageTitle": "关于我们 - Your Fashion Collection",
+          "nav.home": "首页",
+          "nav.products": "产品",
+          "nav.about": "关于我们",
+          "nav.whyus": "为什么选择我们",
+          "nav.contact": "联系我们",
+          "about.welcome": "欢迎了解我们的故事",
+          "about.intro": "探索点燃我们从平凡起步到全球成功旅程的激情与创造力。",
+          "about.background.title": "公司背景与战略地理位置",
+          "about.background.text": "南通快乐时尚有限公司是一家成熟的服装贸易及工业企业，总部位于中国江苏南通，这座城市以其纺织与服装产业著称。公司地理位置优越，距离中国最大的商业中心上海仅1.5小时车程。2021年，公司迁至浩邦大厦，开启了其20年历史的新篇章。",
+          "about.leadership.title": "领导力与专业团队",
+          "about.leadership.text": "在张先生的动态领导下，快乐时尚稳步成长为南通外贸企业的佼佼者。公司拥有一支专业的外贸人才队伍以及独立的面料研发部门，确保与国际客户的顺畅沟通，并及时获取最新的全球面料趋势。",
+          "about.quality.title": "对品质与创新设计的承诺",
+          "about.quality.text": "快乐时尚的核心运营在于对品质的坚定承诺。公司的制版、工艺和质检部门通力合作，将设计理念转化为精心制作的服装。通过始终如一地提供高品质产品与专注服务，快乐时尚为国内外市场树立了卓越标准。",
+          "about.production.title": "先进的生产能力与卓越的运营",
+          "about.production.text": "快乐时尚的运营基石在于其现代化的生产设施。独立的样品中心和先进的生产线确保了样品与订单的高效交付。公司在南通和连云港拥有两家自有服装厂，并与多家分包厂合作，从裁剪到包装实现严格的质控和顺畅的生产流程。",
+          "about.brand.title": "品牌发展与市场扩展",
+          "about.brand.text": "凭借为知名外国品牌生产高端服装的丰富经验，快乐时尚迈出了打造自主品牌的步伐。2018年，公司开始开发 Special Staying 女装品牌——这一举措将经典意大利美学与当代文化愿景相结合。2020年10月正式推出的品牌以“时尚、优雅”定位，深受自信、成熟女性的青睐。",
+          "about.philosophy.title": "企业理念与未来愿景",
+          "about.philosophy.text": "快乐时尚的持久成功源于其“团结、奉献、创新、发展”的企业精神。公司秉持诚信、协作和共赢的价值观，这一前瞻性愿景不仅推动了公司的持续成长，也体现了其致力于提升各利益相关者生活品质、并为社会做出积极贡献的承诺。",
+          "footer.text": "&copy; 版权所有 2025 Your Brand. 保留所有权利.",
+          "about.learnMore": "了解更多"
+        }
+      };
+
+      // Mapping for language names (for the button text)
+      const languageNames = {
+        en: "English",
+        es: "Español",
+        zh: "中文"
+      };
+
+      const flagIcons = {
+        en: "https://flagcdn.com/24x18/us.png",
+        es: "https://flagcdn.com/24x18/es.png",
+        zh: "https://flagcdn.com/24x18/cn.png"
+      };
+
+      // Check if a language is stored in localStorage, otherwise default to English
+      let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+      function updateLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (translations[lang] && translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
+          }
+        });
+        // Update the language button flag and text
+        document.querySelector('.lang-btn img').src = flagIcons[lang];
+        document.querySelector('.lang-btn .lang-text').innerText = languageNames[lang];
+      }
+      
+      // Set the language on page load
+      updateLanguage(currentLanguage);
+      
+      // Toggle dropdown display
+      const langBtn = document.querySelector('.lang-btn');
+      const langDropdown = document.querySelector('.lang-dropdown');
+      
+      langBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langDropdown.style.display = (langDropdown.style.display === 'block') ? 'none' : 'block';
+      });
+      
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', function() {
+        langDropdown.style.display = 'none';
+      });
+      
+      // Update language when an option is selected and store it in localStorage
+      langDropdown.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          const lang = this.getAttribute('data-lang');
+          updateLanguage(lang);
+          localStorage.setItem('selectedLanguage', lang);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

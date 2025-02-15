@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pants - Your Fashion Collection</title>
+  <link rel="icon" href="/public/media/icon.png" type="image/x-icon">
+  <!-- Import Montserrat font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/style.css" />
+  <!-- Lightbox2 CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+  <style>
+    /* UNIVERSAL STYLES */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    /* NAVIGATION (DO NOT CHANGE) */
+    header#header {
+      /* Your existing nav bar styles remain unchanged */
+    }
+    
+    /* Language Selector Styles (same as used in other pages) */
+    .language-selector {
+      position: fixed;
+      right: 20px;
+      top: 30px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .lang-btn img {
+      width: 24px;
+      height: auto;
+      margin-right: 8px;
+    }
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 5px;
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .lang-dropdown a:hover {
+      background: #f0f0f0;
+    }
+    .lang-dropdown img {
+      margin-right: 8px;
+      width: 16px;
+      height: auto;
+    }
+    
+    /* Title for the Pants Collection */
+    .collection-title {
+      text-align: center;
+      margin-top: 130px; /* Space below the navigation bar */
+      margin-bottom: -100px; /* Space above the carousel */
+      flex-shrink: 0;
+    }
+    .collection-title h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: relative;
+      display: inline-block;
+      margin: 0;
+    }
+    .collection-title h1::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      width: 80px;
+      height: 4px;
+      background-color: #333;
+      transform: translateX(-50%);
+    }
+    
+    /* GALLERY WRAPPER (Carousel Viewport) */
+    .gallery-wrapper {
+      position: relative;
+      width: 2040px; /* 5 photos * 400px + 4 gaps * 10px */
+      margin: 0 auto;
+      height: calc(100vh - 200px);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+    }
+    
+    /* HORIZONTAL GALLERY (Carousel Track) */
+    #seamless {
+      display: flex;
+      width: max-content;
+      height: 80%;
+      gap: 10px;
+      overflow-x: scroll;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+    }
+    /* Hide horizontal scrollbar */
+    #seamless::-webkit-scrollbar {
+      display: none;
+    }
+    #seamless {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* EACH PHOTO CONTAINER (400px wide) */
+    #seamless a {
+      flex: 0 0 400px;
+      scroll-snap-align: start;
+      position: relative;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    #seamless a:hover {
+      z-index: 1000;
+    }
+    /* GALLERY IMAGES */
+    #seamless a img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    /* Hover effect */
+    #seamless a:hover img {
+      transform: scale(1.1);
+      filter: brightness(0.8);
+    }
+    /* Overlay text on hover */
+    #seamless a::after {
+      content: "View Image";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #seamless a:hover::after {
+      opacity: 1;
+    }
+    
+    /* CAROUSEL ARROWS */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 2rem;
+      z-index: 1100;
+      border-radius: 50%;
+      user-select: none;
+    }
+    #arrow-left { left: 20px; }
+    #arrow-right { right: 20px; }
+    
+    /* --- LIGHTBOX2 CUSTOMIZATIONS --- */
+    .lightboxOverlay {
+      background: rgba(0, 0, 0, 0.8) !important;
+    }
+    .lightbox,
+    .lb-outerContainer,
+    .lb-container,
+    .lb-dataContainer,
+    .lb-data,
+    .lb-details,
+    .lb-close,
+    .lb-loader {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .lb-number, .lb-caption {
+      display: none !important;
+    }
+    .lb-outerContainer {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      height: 100vh !important;
+    }
+    .lb-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+    .lb-image {
+      max-width: 80vw;
+      max-height: 80vh;
+      object-fit: contain !important;
+      display: block;
+      margin: 0;
+      border: none !important;
+      outline: none !important;
+    }
+    .lb-nav {
+      width: 500px !important;
+      height: 80vh !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      pointer-events: none;
+    }
+    .lb-prev,
+    .lb-next {
+      pointer-events: auto;
+      position: absolute;
+      top: 50%;
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 2rem;
+      line-height: 50px;
+      text-align: center;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2000;
+      transform: translateY(-50%);
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    .lb-prev { left: 20px; }
+    .lb-next { right: 20px; }
+    .lightbox-left,
+    .lightbox-right {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .lightbox-left { left: 0; }
+    .lightbox-right { right: 0; }
+    
+    /* --- Entrance Effects --- */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    header#header { animation: fadeInDown 1s ease-out; }
+    .collection-title { animation: fadeIn 1s ease-out 0.5s; animation-fill-mode: both; }
+    .gallery-wrapper { animation: fadeIn 1s ease-out 0.7s; animation-fill-mode: both; }
+    footer { animation: fadeIn 1s ease-out 0.9s; animation-fill-mode: both; }
+  </style>
+</head>
+<body>
+  <!-- Fixed Navigation Header -->
+  <header id="header">
+    <nav>
+      <div class="logo">
+        <a href="index.html">
+          <img src="/public/media/logo.png" alt="Your Brand Logo">
+        </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="products.html" data-i18n="nav.products">Products</a></li>
+        <li><a href="about.html" data-i18n="nav.about">About Us</a></li>
+        <li><a href="advantages.html" data-i18n="nav.whyus">Why Us</a></li>
+        <li><a href="contact.html" data-i18n="nav.contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Language Selector (Fixed at Top-Right) -->
+  <div class="language-selector">
+    <button class="lang-btn">
+      <img src="https://flagcdn.com/24x18/us.png" alt="English">
+      <span class="lang-text">English</span>
+    </button>
+    <div class="lang-dropdown">
+      <a href="#" data-lang="en">
+        <img src="https://flagcdn.com/16x12/us.png" alt="English">
+        <span>English</span>
+      </a>
+      <a href="#" data-lang="es">
+        <img src="https://flagcdn.com/16x12/es.png" alt="Español">
+        <span>Español</span>
+      </a>
+      <a href="#" data-lang="zh">
+        <img src="https://flagcdn.com/16x12/cn.png" alt="中文">
+        <span>中文</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Title for the Pants Collection -->
+  <div class="collection-title">
+    <h1 data-i18n="collection.pants.title">Our Bottom Collections</h1>
+  </div>
+
+  <!-- Gallery Wrapper (Carousel Viewport) -->
+  <div class="gallery-wrapper">
+    <!-- Left Arrow (Carousel) -->
+    <div class="arrow" id="arrow-left">&#10094;</div>
+    <!-- Pants Collection (Carousel Track) -->
+    <section id="seamless">
+      <!-- Each anchor only holds the image -->
+      <a href="/public/media/pants/bottom_1.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_1.jpg" alt="Seamless 1">
+      </a>
+      <a href="/public/media/pants/bottom_2.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_2.jpg" alt="Seamless 2">
+      </a>
+      <a href="/public/media/pants/bottom_3.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_3.jpg" alt="Seamless 3">
+      </a>
+      <a href="/public/media/pants/bottom_4.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_4.jpg" alt="Seamless 4">
+      </a>
+      <a href="/public/media/pants/bottom_5.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_5.jpg" alt="Seamless 5">
+      </a>
+      <a href="/public/media/pants/bottom_6.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_6.jpg" alt="Seamless 6">
+      </a>
+      <a href="/public/media/pants/bottom_7.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_7.jpg" alt="Seamless 7">
+      </a>
+      <a href="/public/media/pants/bottom_8.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_8.jpg" alt="Seamless 8">
+      </a>
+      <a href="/public/media/pants/bottom_9.jpg" data-lightbox="seamless-gallery">
+        <img src="/public/media/pants/bottom_9.jpg" alt="Seamless 9">
+      </a>
+    </section>
+    <!-- Right Arrow (Carousel) -->
+    <div class="arrow" id="arrow-right">&#10095;</div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p data-i18n="footer.text">&copy; CopyRight 2024 All Right Reserved Joyful Fashion 苏ICP备2023052917号</p>
+  </footer>
+  
+  <!-- Include jQuery (required for Lightbox2) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Lightbox2 JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+  <script src="/public/js/main.js"></script>
+  <script>
+    // Lightbox configuration: disable fade effects
+    lightbox.option({
+      fadeDuration: 0,
+      imageFadeDuration: 0,
+      resizeDuration: 0,
+    });
+
+    // Clickable areas for left/right navigation in Lightbox
+    document.addEventListener("DOMContentLoaded", () => {
+      const lightboxContainer = document.querySelector(".lb-container");
+      if (lightboxContainer) {
+        const lightboxLeft = document.createElement("div");
+        const lightboxRight = document.createElement("div");
+
+        lightboxLeft.classList.add("lightbox-left");
+        lightboxRight.classList.add("lightbox-right");
+
+        lightboxLeft.addEventListener("click", () => { lightbox.prev(); });
+        lightboxRight.addEventListener("click", () => { lightbox.next(); });
+
+        lightboxContainer.appendChild(lightboxLeft);
+        lightboxContainer.appendChild(lightboxRight);
+      }
+    });
+
+    // Carousel functionality
+    const seamless = document.getElementById('seamless');
+    const scrollAmount = 410; // 400px photo + 10px gap
+    const visibleCount = 5;   // 5 photos visible
+
+    // Get original items
+    const originalItems = Array.from(seamless.children);
+    const originalCount = originalItems.length;
+
+    // Clone first 'visibleCount' items and append them
+    for (let i = 0; i < visibleCount; i++) {
+      const clone = originalItems[i].cloneNode(true);
+      seamless.appendChild(clone);
+    }
+
+    // Clone last 'visibleCount' items and prepend them
+    for (let i = originalCount - visibleCount; i < originalCount; i++) {
+      const clone = originalItems[i].cloneNode(true);
+      seamless.insertBefore(clone, seamless.firstChild);
+    }
+
+    // Set initial scroll so only the original items are in view
+    seamless.scrollLeft = visibleCount * scrollAmount;
+
+    // Check and adjust scroll position when in cloned areas
+    function checkLoop() {
+      seamless.style.scrollBehavior = 'auto';
+      if (seamless.scrollLeft < visibleCount * scrollAmount) {
+        seamless.scrollLeft += originalCount * scrollAmount;
+      } else if (seamless.scrollLeft >= (visibleCount + originalCount) * scrollAmount) {
+        seamless.scrollLeft -= originalCount * scrollAmount;
+      }
+      setTimeout(() => {
+        seamless.style.scrollBehavior = 'smooth';
+      }, 0);
+    }
+
+    // Arrow click events (Carousel)
+    document.getElementById('arrow-right').addEventListener('click', () => {
+      seamless.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      setTimeout(checkLoop, 350);
+    });
+    document.getElementById('arrow-left').addEventListener('click', () => {
+      seamless.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      setTimeout(checkLoop, 350);
+    });
+    seamless.addEventListener('scroll', checkLoop);
+  </script>
+  
+  <!-- Language Switcher Script with localStorage Persistence -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Translation dictionary for English, Spanish, and Chinese
+      const translations = {
+        en: {
+          "nav.home": "Home",
+          "nav.products": "Products",
+          "nav.about": "About Us",
+          "nav.whyus": "Why Us",
+          "nav.contact": "Contact Us",
+          "collection.pants.title": "Our Bottom Collections",
+          "footer.text": "&copy; CopyRight 2024 All Right Reserved Joyful Fashion 苏ICP备2023052917号"
+        },
+        es: {
+          "nav.home": "Inicio",
+          "nav.products": "Productos",
+          "nav.about": "Sobre Nosotros",
+          "nav.whyus": "Por Qué Nosotros",
+          "nav.contact": "Contáctanos",
+          "collection.pants.title": "Colección de Pantalones",
+          "footer.text": "&copy; CopyRight 2024 Joyful Fashion. Todos los derechos reservados. 苏ICP备2023052917号"
+        },
+        zh: {
+          "nav.home": "首页",
+          "nav.products": "产品",
+          "nav.about": "关于我们",
+          "nav.whyus": "为什么选择我们",
+          "nav.contact": "联系我们",
+          "collection.pants.title": "我们的下装系列",
+          "footer.text": "&copy; 版权所有 2024 快乐时尚 苏ICP备2023052917号"
+        }
+      };
+
+      // Mapping for language names
+      const languageNames = {
+        en: "English",
+        es: "Español",
+        zh: "中文"
+      };
+
+      const flagIcons = {
+        en: "https://flagcdn.com/24x18/us.png",
+        es: "https://flagcdn.com/24x18/es.png",
+        zh: "https://flagcdn.com/24x18/cn.png"
+      };
+
+      // Check localStorage for selected language; default to English
+      let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+      function updateLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (translations[lang] && translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
+          }
+        });
+        // Update language button flag and text
+        document.querySelector('.lang-btn img').src = flagIcons[lang];
+        document.querySelector('.lang-btn .lang-text').innerText = languageNames[lang];
+      }
+      
+      // Set language on page load
+      updateLanguage(currentLanguage);
+      
+      // Toggle dropdown display
+      const langBtn = document.querySelector('.lang-btn');
+      const langDropdown = document.querySelector('.lang-dropdown');
+      
+      langBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        langDropdown.style.display = (langDropdown.style.display === 'block') ? 'none' : 'block';
+      });
+      
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', function() {
+        langDropdown.style.display = 'none';
+      });
+      
+      // Update language when an option is selected
+      langDropdown.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          const lang = this.getAttribute('data-lang');
+          currentLanguage = lang;
+          updateLanguage(lang);
+          localStorage.setItem('selectedLanguage', lang);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
