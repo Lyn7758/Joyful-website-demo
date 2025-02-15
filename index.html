@@ -126,7 +126,7 @@
     .about-video {
       flex: 1 1 400px;
     }
-    .about-video video {
+    .about-video iframe {
       width: 100%;
       border-radius: 8px;
     }
@@ -169,7 +169,7 @@
     #contact .btn {
       display: inline-block;
       padding: 10px 20px;
-      background: #d62828;;
+      background: #d62828;
       color: #fff;
       text-decoration: none;
       border-radius: 4px;
@@ -381,17 +381,17 @@
     <h2 data-i18n="about.title">About Us</h2>
     <div class="about-container">
       <div class="about-video">
+        <!-- Added an id to the iframe so we can update its src based on language -->
         <iframe
-        width="560" 
-        height="315" 
-        src="https://www.youtube.com/embed/ZJrPG9CiVN8" 
-        title="YouTube video player" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-      
-      
+          id="about-video-iframe"
+          width="560" 
+          height="315" 
+          src="https://www.youtube.com/embed/ZJrPG9CiVN8" 
+          title="YouTube video player" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
       </div>
       
       <div class="about-text">
@@ -556,6 +556,17 @@
         // Update the language button flag and text
         document.querySelector('.lang-btn img').src = flagIcons[lang];
         document.querySelector('.lang-btn .lang-text').innerText = languageNames[lang];
+
+        // Update the video link based on language.
+        // For Chinese ("zh"), change the video src to the desired Chinese version URL.
+        const videoIframe = document.getElementById('about-video-iframe');
+        if (videoIframe) {
+          if (lang === 'zh') {
+            videoIframe.src = "https://v.qq.com/txp/iframe/player.html?vid=w3532rbgoua"; // Replace with your Chinese video URL
+          } else {
+            videoIframe.src = "https://v.qq.com/txp/iframe/player.html?vid=w3532rbgoua";
+          }
+        }
       }
       
       // Set the language on page load
